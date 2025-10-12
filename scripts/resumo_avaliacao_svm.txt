@@ -1,0 +1,40 @@
+======================================================================
+RESUMO DA AVALIAÇÃO - MODELO SVM
+Dataset: svm.csv
+Gerado em: 2025-10-12 05:09:27.621053
+======================================================================
+
+CONFIGURAÇÃO DO MODELO:
+• Algoritmo: SVM (Support Vector Machine)
+• Kernel: rbf
+• Parâmetro C: 1.0
+• Gamma: scale
+• Normalização: Yeo-Johnson + StandardScaler
+• Features: 122
+• Amostras totais: 80,648
+• Divisão treino/teste: 32,259 / 24,194
+
+MÉTRICAS DE AVALIAÇÃO (Teste):
+• Acurácia: 0.9916 (99.16%)
+• Precisão: 0.9916 (99.16%)
+• Recall: 0.9916 (99.16%)
+• F1-Score: 0.9916 (99.16%)
+• ROC-AUC: 0.9997 (99.97%)
+
+VALIDAÇÃO CRUZADA (5-folds):
+• Acurácia: 0.9955 ± 0.0004
+• Precisão: 0.9955 ± 0.0004
+• Recall: 0.9955 ± 0.0004
+• F1-Score: 0.9955 ± 0.0004
+• ROC-AUC: 0.9998 ± 0.0001
+
+MATRIZ DE CONFUSÃO:
+[[13558   140]
+ [   64 10432]]
+
+ARQUIVOS GERADOS:
+• metricas_avaliacao_svm.csv - Métricas principais
+• matriz_confusao_svm.csv - Matriz de confusão
+• relatorio_classificacao_svm.csv - Relatório detalhado
+• validacao_cruzada_svm.csv - Resultados CV
+• resumo_avaliacao_svm.txt - Este arquivo
