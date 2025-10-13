@@ -1,4 +1,7 @@
 import pickle
+import os
+
+from sklearn import datasets
 
 nome_dataset_default = 'svm'
 def get_info_modelo(nome_dataset = nome_dataset_default):
@@ -10,28 +13,100 @@ def get_info_modelo(nome_dataset = nome_dataset_default):
                 'arq_dataset_pkl': '../dataset/svm.pkl'
             }
         }
+    if nome_dataset == 'terasort':
+        return {
+            'nome_dataset': 'terasort',
+            'parametros': {
+                'arq_dataset_csv': '../dataset/terasort.csv',
+                'arq_dataset_pkl': '../dataset/terasort.pkl'
+            }
+        }
+
+
+def save_informacao_analise(datasets = None, nome_data_set = nome_dataset_default):
+    try:
+        info_modelo = get_info_modelo(nome_data_set)
+        
+        # Verificar se o arquivo PKL existe
+        arquivo_pkl = info_modelo['parametros']['arq_dataset_pkl']
+        
+        with open(arquivo_pkl, 'wb') as f:
+            datasets['X_train_scaled'] = datasets['X_train_scaled'] if 'X_train_scaled' in datasets else None
+            datasets['X_test_scaled'] = datasets['X_test_scaled'] if 'X_test_scaled' in datasets else None
+            datasets['X_val_scaled'] = datasets['X_val_scaled'] if 'X_val_scaled' in datasets else None            
+            pickle.dump(datasets, f)
+        print(f"✅ Dataset salvo com sucesso em {arquivo_pkl}")
+        
+    except Exception as e:
+        print(f"❌ Erro ao salvar dataset: {e}")
+        raise
+    
+def print_informacao_analise(nome_data_set = nome_dataset_default):    
+    try:
+        info_modelo = get_info_modelo(nome_data_set)
+        
+        # Verificar se o arquivo PKL existe
+        arquivo_pkl = info_modelo['parametros']['arq_dataset_pkl']
+        
+        with open(arquivo_pkl, 'rb') as f:
+            datasets = pickle.load(f)
+            print('X_train.shape', datasets['X_train'].shape)
+            print('X_test.shape', datasets['X_test'].shape)
+            print('X_val.shape', datasets['X_val'].shape)            
+            print('X_train_scaled.shape', datasets['X_train_scaled'].shape if 'X_train_scaled' in datasets and datasets['X_train_scaled'] is not None else None)
+            print('X_test_scaled.shape', datasets['X_test_scaled'].shape if 'X_test_scaled' in datasets and datasets['X_test_scaled'] is not None else None)
+            print('X_val_scaled.shape', datasets['X_val_scaled'].shape if 'X_val_scaled' in datasets and datasets['X_val_scaled'] is not None else None)
+            print('classes_mapping', datasets['classes_mapping'] if 'classes_mapping' in datasets else None)
+            print('features_ganho_informacao', datasets['features_ganho_informacao'] if 'features_ganho_informacao' in datasets else None)  
+            print('qtd features_ganho_informacao: ', len(datasets['features_ganho_informacao']) if 'features_ganho_informacao' in datasets else None)  
+        return datasets
+        
+    except FileNotFoundError as e:
+        print(f"❌ Erro de arquivo: {e}")
+        raise
+    except pickle.UnpicklingError as e:
+        print(f"❌ Erro ao carregar o arquivo PKL: {e}")
+        raise
+    except Exception as e:
+        print(f"❌ Erro inesperado ao carregar dataset: {e}")
+        raise
 
 def get_dataset_analise(nome_data_set = nome_dataset_default,analise_ganho_de_informacao=False):    
-    info_modelo = get_info_modelo(nome_data_set)
-    with open(info_modelo['parametros']['arq_dataset_pkl'], 'rb') as f:
-        datasets = pickle.load(f)
-        if analise_ganho_de_informacao:
-            if 'features_ganho_informacao' not in datasets or datasets['features_ganho_informacao'] is None:
-                raise ValueError("O dataset não contém 'features_ganho_informacao' ou ela é None. Execute primeiro a análise de ganho de informação no notebook correspondente.")
+    try:
+        info_modelo = get_info_modelo(nome_data_set)
+        
+        # Verificar se o arquivo PKL existe
+        arquivo_pkl = info_modelo['parametros']['arq_dataset_pkl']
+        
+        with open(arquivo_pkl, 'rb') as f:
+            datasets = pickle.load(f)
             
-            # Aplicar seleção de features baseada no ganho de informação
-            datasets['X_train'] = datasets['X_train'][datasets['features_ganho_informacao']]
-            datasets['X_test'] = datasets['X_test'][datasets['features_ganho_informacao']]
-            datasets['X_val'] = datasets['X_val'][datasets['features_ganho_informacao']]
-            datasets['y_train'] = datasets['y_train']   
-            datasets['y_test'] = datasets['y_test']
-            datasets['y_val'] = datasets['y_val']
-            datasets['X_train_scaled'] = datasets['X_train_scaled']
-            datasets['X_test_scaled'] = datasets['X_test_scaled']
-            datasets['X_val_scaled'] = datasets['X_val_scaled']
-            datasets['classes_mapping'] = datasets['classes_mapping']
-            datasets['features_ganho_informacao'] = datasets['features_ganho_informacao']
-    return datasets
+            if analise_ganho_de_informacao:
+                if 'features_ganho_informacao' not in datasets or datasets['features_ganho_informacao'] is None:
+                    raise ValueError("O dataset não contém 'features_ganho_informacao' ou ela é None. Execute primeiro a análise de ganho de informação no notebook correspondente.")
+                print("-------------",datasets['X_train'][datasets['features_ganho_informacao']])
+                # Aplicar seleção de features baseada no ganho de informação
+                datasets['X_train'] = datasets['X_train'][datasets['features_ganho_informacao']]
+                datasets['X_test'] = datasets['X_test'][datasets['features_ganho_informacao']]
+                datasets['X_val'] = datasets['X_val'][datasets['features_ganho_informacao']]
+                datasets['X_train_scaled'] = datasets['X_train_scaled'][datasets['features_ganho_informacao'] if 'X_train_scaled' in datasets else []]
+                datasets['X_test_scaled'] = datasets['X_test_scaled'][datasets['features_ganho_informacao'] if 'X_test_scaled' in datasets else []]
+                datasets['X_val_scaled'] = datasets['X_val_scaled'][datasets['features_ganho_informacao'] if 'X_val_scaled' in datasets else []]
+                print("-------------",datasets['X_train'][datasets['features_ganho_informacao']])
+        return datasets
+        
+    except FileNotFoundError as e:
+        print(f"❌ Erro de arquivo: {e}")
+        raise
+    except pickle.UnpicklingError as e:
+        print(f"❌ Erro ao carregar o arquivo PKL: {e}")
+        raise
+    except KeyError as e:
+        print(f"❌ Erro: Chave não encontrada no dataset: {e}")
+        raise
+    except Exception as e:
+        print(f"❌ Erro inesperado ao carregar dataset: {e}")
+        raise
 
 
 def atualizar_features_dataset_analise(datasets = None,features = None):    
