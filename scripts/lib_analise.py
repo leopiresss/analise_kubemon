@@ -34,6 +34,19 @@ def get_dataset_analise(nome_data_set = nome_dataset_default,analise_ganho_de_in
     return datasets
 
 
+def atualizar_features_dataset_analise(datasets = None,features = None):    
+    if datasets is None or features is None:
+        raise ValueError("Os parâmetros 'datasets' e 'features' não podem ser None.")
+    # Aplicar seleção de features baseada no ganho de informação
+    datasets['X_train'] = datasets['X_train'][features]
+    datasets['X_test'] = datasets['X_test'][features]
+    datasets['X_val'] = datasets['X_val'][features]
+    datasets['features_ganho_informacao'] = features
+    return datasets
+
+
+
+
 def main():
     """
     Função principal para demonstrar o uso da biblioteca lib_analise
