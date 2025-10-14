@@ -87,7 +87,7 @@ def get_dataset_analise(nome_data_set = nome_dataset_default,analise_ganho_de_in
                 print("-------------",datasets['X_train'][datasets['features_ganho_informacao']])
                 # Aplicar seleção de features baseada no ganho de informação
                 datasets['X_train'] = datasets['X_train'][datasets['features_ganho_informacao']]
-                datasets['X_test'] = datasets['X_test'][datasets['features_ganho_informacao']]
+                datasets['X_test'] = datasets['X_test'][datasets['features_ganho_informacao']]  
                 datasets['X_val'] = datasets['X_val'][datasets['features_ganho_informacao']]
                 datasets['X_train_scaled'] = datasets['X_train_scaled'][datasets['features_ganho_informacao'] if 'X_train_scaled' in datasets else []]
                 datasets['X_test_scaled'] = datasets['X_test_scaled'][datasets['features_ganho_informacao'] if 'X_test_scaled' in datasets else []]
