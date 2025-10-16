@@ -1,0 +1,21 @@
+# Features Selecionadas - Análise de Ganho de Informação
+# Data: 2025-10-15 12:26:12.085542
+# Estratégia: above_median
+# Total de features: 15
+# Redução: 71.2%
+#
+mean_os_net_packets_recv
+mean_os_net_bytes_sent
+mean_container_net_rx_bytes
+mean_os_net_packets_sent
+mean_os_net_bytes_recv
+mean_process_net_rx_bytes
+mean_container_net_tx_bytes
+mean_os_cpu_softirq
+mean_process_net_tx_bytes
+mean_os_cpu_interrupts
+mean_os_cpu_ctx_switches
+mean_os_cpu_soft_interrupts
+mean_process_disk_write_count
+mean_os_cpu_user
+mean_os_cpu_system
