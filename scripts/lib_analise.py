@@ -1,5 +1,6 @@
 import pickle
 import os
+from sklearn.preprocessing import PowerTransformer
 
 from sklearn import datasets
 
@@ -33,7 +34,7 @@ def save_informacao_analise(datasets = None, nome_data_set = nome_dataset_defaul
         with open(arquivo_pkl, 'wb') as f:
             datasets['X_train_scaled'] = datasets['X_train_scaled'] if 'X_train_scaled' in datasets else None
             datasets['X_test_scaled'] = datasets['X_test_scaled'] if 'X_test_scaled' in datasets else None
-            datasets['X_val_scaled'] = datasets['X_val_scaled'] if 'X_val_scaled' in datasets else None            
+            datasets['X_val_scaled'] = datasets['X_val_scaled'] if 'X_val_scaled' in datasets else None           
             pickle.dump(datasets, f)
         print(f"✅ Dataset salvo com sucesso em {arquivo_pkl}")
         
@@ -47,7 +48,7 @@ def print_informacao_analise(nome_data_set = nome_dataset_default):
         
         # Verificar se o arquivo PKL existe
         arquivo_pkl = info_modelo['parametros']['arq_dataset_pkl']
-        
+        print('Nome do dataset: ', nome_data_set)
         with open(arquivo_pkl, 'rb') as f:
             datasets = pickle.load(f)
             print('X_train.shape', datasets['X_train'].shape)
@@ -59,7 +60,7 @@ def print_informacao_analise(nome_data_set = nome_dataset_default):
             print('classes_mapping', datasets['classes_mapping'] if 'classes_mapping' in datasets else None)
             print('features_ganho_informacao', datasets['features_ganho_informacao'] if 'features_ganho_informacao' in datasets else None)  
             print('qtd features_ganho_informacao: ', len(datasets['features_ganho_informacao']) if 'features_ganho_informacao' in datasets else None)  
-        return datasets
+       
         
     except FileNotFoundError as e:
         print(f"❌ Erro de arquivo: {e}")
@@ -74,7 +75,6 @@ def print_informacao_analise(nome_data_set = nome_dataset_default):
 def get_dataset_analise(nome_data_set = nome_dataset_default,analise_ganho_de_informacao=False):    
     try:
         info_modelo = get_info_modelo(nome_data_set)
-        
         # Verificar se o arquivo PKL existe
         arquivo_pkl = info_modelo['parametros']['arq_dataset_pkl']
         
@@ -84,15 +84,18 @@ def get_dataset_analise(nome_data_set = nome_dataset_default,analise_ganho_de_in
             if analise_ganho_de_informacao:
                 if 'features_ganho_informacao' not in datasets or datasets['features_ganho_informacao'] is None:
                     raise ValueError("O dataset não contém 'features_ganho_informacao' ou ela é None. Execute primeiro a análise de ganho de informação no notebook correspondente.")
-                print("-------------",datasets['X_train'][datasets['features_ganho_informacao']])
                 # Aplicar seleção de features baseada no ganho de informação
                 datasets['X_train'] = datasets['X_train'][datasets['features_ganho_informacao']]
                 datasets['X_test'] = datasets['X_test'][datasets['features_ganho_informacao']]  
                 datasets['X_val'] = datasets['X_val'][datasets['features_ganho_informacao']]
-                datasets['X_train_scaled'] = datasets['X_train_scaled'][datasets['features_ganho_informacao'] if 'X_train_scaled' in datasets else []]
-                datasets['X_test_scaled'] = datasets['X_test_scaled'][datasets['features_ganho_informacao'] if 'X_test_scaled' in datasets else []]
-                datasets['X_val_scaled'] = datasets['X_val_scaled'][datasets['features_ganho_informacao'] if 'X_val_scaled' in datasets else []]
-                print("-------------",datasets['X_train'][datasets['features_ganho_informacao']])
+                
+                # Aplicar seleção apenas se os dados escalados existirem
+                if datasets['X_train_scaled'] is not None:
+                    datasets['X_train_scaled'] = datasets['X_train_scaled'][datasets['features_ganho_informacao']]
+                if datasets['X_test_scaled'] is not None:
+                    datasets['X_test_scaled'] = datasets['X_test_scaled'][datasets['features_ganho_informacao']]
+                if datasets['X_val_scaled'] is not None:
+                    datasets['X_val_scaled'] = datasets['X_val_scaled'][datasets['features_ganho_informacao']]
         return datasets
         
     except FileNotFoundError as e:
@@ -119,6 +122,25 @@ def atualizar_features_dataset_analise(datasets = None,features = None):
     datasets['features_ganho_informacao'] = features
     return datasets
 
+
+# Normalização dos dados usando Yeo-Johnson
+def normalization_dataset(datasets):
+    print(f"\n⚖️ Aplicando transformação Yeo-Johnson...")
+    datasets['yeo_johnson_transformer'] = PowerTransformer(method='yeo-johnson', standardize=True)
+    # O fit é feito apenas no conjunto de treino para evitar data leakage
+    datasets['X_train_scaled'] = datasets['yeo_johnson_transformer'].fit_transform(datasets['X_train'])
+    datasets['X_test_scaled'] = datasets['yeo_johnson_transformer'].transform(datasets['X_test'])
+    datasets['X_val_scaled'] = datasets['yeo_johnson_transformer'].transform(datasets['X_val'])
+    save_informacao_analise(datasets = datasets)
+    print(f"   ✅ Transformação Yeo-Johnson aplicada com StandardScaler integrado")
+    print(f"   • Média treino antes: {datasets['X_train'].mean().mean():.3f} | depois: {datasets['X_train_scaled'].mean():.3f}")
+    print(f"   • Std treino antes: {datasets['X_train'].std().mean():.3f} | depois: {datasets['X_train_scaled'].std().mean():.3f}")
+    print(f"   • Média teste antes: {datasets['X_test'].mean().mean():.3f} | depois: {datasets['X_test_scaled'].mean():.3f}")
+    print(f"   • Std teste antes: {datasets['X_test'].std().mean():.3f} | depois: {datasets['X_test_scaled'].std().mean():.3f}")
+    print(f"   • Média validação antes: {datasets['X_val'].mean().mean():.3f} | depois: {datasets['X_val_scaled'].mean():.3f}")
+    print(f"   • Std validação antes: {datasets['X_val'].std().mean():.3f} | depois: {datasets['X_val_scaled'].std().mean():.3f}")
+    print(f"   • Transformação aplicada: Yeo-Johnson + Padronização")
+    return datasets
 
 
 
