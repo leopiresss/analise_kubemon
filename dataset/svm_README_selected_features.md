@@ -1,14 +1,14 @@
 # Features Selecionadas - Análise de Ganho de Informação
 
-**Data de criação:** 2025-10-15 12:26:12.091541
+**Data de criação:** 2025-10-23 21:16:41.445651
 
 **Estratégia utilizada:** above_median
 
 ## Resumo
 
-- **Features originais:** 52
-- **Features selecionadas:** 15
-- **Redução:** 71.2%
+- **Features originais:** 48
+- **Features selecionadas:** 19
+- **Redução:** 60.4%
 
 ## Arquivos Gerados
 
@@ -30,16 +30,16 @@ O arquivo `selected_datasets.pkl` contém:
 
 | Rank | Feature | Information Gain | Mutual Information |
 |------|---------|------------------|--------------------|
-| 50 | mean_os_net_bytes_sent | 0.607395 | 0.658197 |
-| 14 | mean_os_net_packets_sent | 0.412268 | 0.288321 |
-| 23 | mean_os_net_packets_recv | 0.243639 | 0.224137 |
-| 46 | mean_os_cpu_interrupts | 0.210774 | 0.188144 |
-|  1 | mean_os_cpu_ctx_switches | 0.187970 | 0.194073 |
-| 11 | mean_os_cpu_soft_interrupts | 0.186976 | 0.177688 |
-| 29 | mean_os_cpu_softirq | 0.135683 | 0.124693 |
-| 17 | mean_os_cpu_system | 0.133248 | 0.213352 |
-| 24 | mean_os_cpu_user | 0.084585 | 0.125483 |
-| 12 | mean_os_net_bytes_recv | 0.046311 | 0.270387 |
+|  4 | mean_container_net_rx_packets | 0.019351 | 0.072516 |
+|  2 | mean_container_net_tx_packets | 0.009718 | 0.079438 |
+|  7 | mean_os_disk_write_io | 0.007512 | 0.047747 |
+|  3 | mean_os_mem_nr_mapped | 0.005773 | 0.073238 |
+| 22 | mean_os_disk_write_merge | 0.004950 | 0.013181 |
+| 15 | mean_container_mem_mapped_file | 0.004915 | 0.026477 |
+|  8 | mean_container_cpu_user | 0.003533 | 0.053143 |
+|  9 | mean_container_cpu_system | 0.003258 | 0.042540 |
+| 21 | mean_os_mem_nr_inactive_anon | 0.002461 | 0.016893 |
+|  5 | mean_os_mem_pgpgout | 0.002220 | 0.062524 |
 
 ## Como Usar
 

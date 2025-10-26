@@ -1,21 +1,25 @@
 # Features Selecionadas - Análise de Ganho de Informação
-# Data: 2025-10-15 12:26:12.085542
+# Data: 2025-10-23 21:16:41.438645
 # Estratégia: above_median
-# Total de features: 15
-# Redução: 71.2%
+# Total de features: 19
+# Redução: 60.4%
 #
-mean_os_net_packets_recv
-mean_os_net_bytes_sent
-mean_container_net_rx_bytes
-mean_os_net_packets_sent
-mean_os_net_bytes_recv
-mean_process_net_rx_bytes
-mean_container_net_tx_bytes
-mean_os_cpu_softirq
-mean_process_net_tx_bytes
-mean_os_cpu_interrupts
-mean_os_cpu_ctx_switches
-mean_os_cpu_soft_interrupts
-mean_process_disk_write_count
-mean_os_cpu_user
-mean_os_cpu_system
+mean_container_net_tx_packets
+mean_container_mem_rss
+mean_os_disk_write_io
+mean_os_mem_nr_inactive_anon
+mean_os_mem_nr_mapped
+mean_container_cpu_user
+mean_container_mem_pgpgin
+mean_container_mem_mapped_file
+mean_container_mem_active_file
+mean_os_disk_write_sectors
+mean_os_disk_time_in_queue
+mean_container_mem_inactive_anon
+mean_os_disk_read_ticks
+mean_os_disk_io_ticks
+mean_container_net_rx_packets
+mean_os_mem_nr_active_file
+mean_os_disk_write_merge
+mean_container_cpu_system
+mean_os_mem_pgpgout
